@@ -26,6 +26,7 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
+            string cpfDesformatado = model.CPF.Replace(".", "").Replace("-", "");
             
             if (!this.ModelState.IsValid)
             {
@@ -36,32 +37,44 @@ namespace WebAtividadeEntrevista.Controllers
                 Response.StatusCode = 400;
                 return Json(string.Join(Environment.NewLine, erros));
             }
-            else
+
+            if (!bo.ValidarCPF(model.CPF))
             {
+                Response.StatusCode = 400;
+                return Json("CPF inválido.");
+            }
+
+            if (bo.VerificarExistencia(cpfDesformatado))
+            {
+                Response.StatusCode = 400;
+                return Json("CPF já registrado.");
+            }
+
                 
-                model.Id = bo.Incluir(new Cliente()
-                {                    
-                    CEP = model.CEP,
-                    Cidade = model.Cidade,
-                    Email = model.Email,
-                    Estado = model.Estado,
-                    Logradouro = model.Logradouro,
-                    Nacionalidade = model.Nacionalidade,
-                    Nome = model.Nome,
-                    Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
-                });
+            model.Id = bo.Incluir(new Cliente()
+            {                    
+                CEP = model.CEP,
+                Cidade = model.Cidade,
+                Email = model.Email,
+                CPF = cpfDesformatado,
+                Estado = model.Estado,
+                Logradouro = model.Logradouro,
+                Nacionalidade = model.Nacionalidade,
+                Nome = model.Nome,
+                Sobrenome = model.Sobrenome,
+                Telefone = model.Telefone
+            });
 
            
-                return Json("Cadastro efetuado com sucesso");
-            }
+            return Json("Cadastro efetuado com sucesso");
         }
 
         [HttpPost]
         public JsonResult Alterar(ClienteModel model)
         {
             BoCliente bo = new BoCliente();
-       
+            string cpfDesformatado = model.CPF.Replace(".", "").Replace("-", "");
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -71,24 +84,28 @@ namespace WebAtividadeEntrevista.Controllers
                 Response.StatusCode = 400;
                 return Json(string.Join(Environment.NewLine, erros));
             }
-            else
+
+            if (!bo.ValidarCPF(model.CPF))
             {
-                bo.Alterar(new Cliente()
-                {
-                    Id = model.Id,
-                    CEP = model.CEP,
-                    Cidade = model.Cidade,
-                    Email = model.Email,
-                    Estado = model.Estado,
-                    Logradouro = model.Logradouro,
-                    Nacionalidade = model.Nacionalidade,
-                    Nome = model.Nome,
-                    Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
-                });
-                               
-                return Json("Cadastro alterado com sucesso");
+                return Json("CPF inválido.");
             }
+
+            bo.Alterar(new Cliente()
+            {
+                Id = model.Id,
+                CEP = model.CEP,
+                Cidade = model.Cidade,
+                Email = model.Email,
+                CPF = model.CPF.Replace(".", "").Replace("-", ""),
+                Estado = model.Estado,
+                Logradouro = model.Logradouro,
+                Nacionalidade = model.Nacionalidade,
+                Nome = model.Nome,
+                Sobrenome = model.Sobrenome,
+                Telefone = model.Telefone
+            });
+                               
+            return Json("Cadastro alterado com sucesso");
         }
 
         [HttpGet]
@@ -106,6 +123,7 @@ namespace WebAtividadeEntrevista.Controllers
                     CEP = cliente.CEP,
                     Cidade = cliente.Cidade,
                     Email = cliente.Email,
+                    CPF = Convert.ToUInt64(cliente.CPF).ToString(@"000\.000\.000\-00"),
                     Estado = cliente.Estado,
                     Logradouro = cliente.Logradouro,
                     Nacionalidade = cliente.Nacionalidade,
