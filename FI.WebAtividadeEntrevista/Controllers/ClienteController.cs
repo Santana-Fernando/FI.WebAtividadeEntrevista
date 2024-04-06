@@ -87,6 +87,7 @@ namespace WebAtividadeEntrevista.Controllers
 
             if (!bo.ValidarCPF(model.CPF))
             {
+                Response.StatusCode = 400;
                 return Json("CPF inválido.");
             }
 
@@ -96,7 +97,7 @@ namespace WebAtividadeEntrevista.Controllers
                 CEP = model.CEP,
                 Cidade = model.Cidade,
                 Email = model.Email,
-                CPF = model.CPF.Replace(".", "").Replace("-", ""),
+                CPF = cpfDesformatado,
                 Estado = model.Estado,
                 Logradouro = model.Logradouro,
                 Nacionalidade = model.Nacionalidade,
