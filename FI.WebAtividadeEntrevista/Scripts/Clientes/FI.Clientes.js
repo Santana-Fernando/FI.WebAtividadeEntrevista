@@ -59,7 +59,18 @@ function ModalDialog(titulo, texto) {
 }
 
 function ModalBeneficiario(link) {
-    var texto = `<div id="beneficiario" class="modal fade">
+    var texto = `
+                <style>
+                    #salvarBeneficiario {
+			            top: 24px;
+		            }
+		            @media only screen and (max-width: 991px) {
+			            #salvarBeneficiario {
+				            top: 0px;
+			            }
+		            }
+                </style>
+                  <div id="beneficiario" class="modal fade">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -83,7 +94,7 @@ function ModalBeneficiario(link) {
 				                                <input required="required" type="text" class="form-control" id="CPFBeneficiario" name="CPFBeneficiario" placeholder="Ex.: 010.011.111-00" maxlength="14">
 			                                </div>
 		                                </div>
-                                        <div class="col-md-4" style="top: 24px;">
+                                        <div class="col-md-4" id="salvarBeneficiario">
 				                            <button type="button" class="btn btn-success" onclick="SalvarBeneficiario()">Salvar</button>
 			                            </div>
 	                                </div>
