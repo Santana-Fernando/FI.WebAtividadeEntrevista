@@ -19,7 +19,7 @@ namespace FI.AtividadeEntrevista.DAL
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
             
             parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", beneficiario.Nome));
-            parametros.Add(new System.Data.SqlClient.SqlParameter("CEP", beneficiario.CPF));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));
             parametros.Add(new System.Data.SqlClient.SqlParameter("IDCLIENTE", beneficiario.Idcliente));
 
             DataSet ds = base.Consultar("FI_SP_IncBeneficiarioV2", parametros);
@@ -131,6 +131,7 @@ namespace FI.AtividadeEntrevista.DAL
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
                     DML.Beneficiario cli = new DML.Beneficiario();
+                    cli.Id = row.Field<long>("ID");
                     cli.CPF = row.Field<string>("CPF");
                     cli.Nome = row.Field<string>("Nome");
                     cli.Idcliente = row.Field<long>("IDCLIENTE");

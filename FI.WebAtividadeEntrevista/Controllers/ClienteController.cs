@@ -26,7 +26,7 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoCliente bo = new BoCliente();
             string cpfDesformatado = model.CPF.Replace(".", "").Replace("-", "");
-            
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -49,9 +49,9 @@ namespace WebAtividadeEntrevista.Controllers
                 return Json("CPF já registrado.");
             }
 
-                
+
             model.Id = bo.Incluir(new Cliente()
-            {                    
+            {
                 CEP = model.CEP,
                 Cidade = model.Cidade,
                 Email = model.Email,
@@ -64,7 +64,7 @@ namespace WebAtividadeEntrevista.Controllers
                 Telefone = model.Telefone
             });
 
-           
+
             return Json("Cadastro efetuado com sucesso");
         }
 
@@ -104,7 +104,7 @@ namespace WebAtividadeEntrevista.Controllers
                 Sobrenome = model.Sobrenome,
                 Telefone = model.Telefone
             });
-                               
+
             return Json("Cadastro alterado com sucesso");
         }
 
@@ -132,7 +132,7 @@ namespace WebAtividadeEntrevista.Controllers
                     Telefone = cliente.Telefone
                 };
 
-            
+
             }
 
             return View(model);
@@ -183,6 +183,10 @@ namespace WebAtividadeEntrevista.Controllers
 
                 List<Beneficiario> beneficiario = new BoBeneficiario().Pesquisa(jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
 
+                foreach (var item in beneficiario)
+                {
+                    item.CPF = Convert.ToUInt64(item.CPF).ToString(@"000\.000\.000\-00");
+                }
                 //Return result to jTable
                 return Json(new { Result = "OK", Records = beneficiario, TotalRecordCount = qtd });
             }
@@ -190,6 +194,66 @@ namespace WebAtividadeEntrevista.Controllers
             {
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
+        }
+
+        [HttpPost]
+        public JsonResult SalvarBeneficiario(BeneficiarioModel model)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                                      from error in item.Errors
+                                      select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json(string.Join(Environment.NewLine, erros));
+            }
+
+            string cpfDesformatado = model.CPF.Replace(".", "").Replace("-", "");
+
+            if (!bo.ValidarCPF(model.CPF))
+            {
+                Response.StatusCode = 400;
+                return Json("CPF inválido.");
+            }
+
+            if(model.Id != 0)
+            {
+                bo.Alterar(new Beneficiario()
+                {
+                    Id = model.Id,
+                    CPF = cpfDesformatado,
+                    Nome = model.Nome,
+                    Idcliente = model.Idcliente
+                });
+            } else
+            {
+                if (bo.VerificarExistencia(cpfDesformatado))
+                {
+                    Response.StatusCode = 400;
+                    return Json("CPF já registrado.");
+                }
+                model.Id = bo.Incluir(new Beneficiario()
+                {
+                    CPF = cpfDesformatado,
+                    Nome = model.Nome,
+                    Idcliente = model.Idcliente
+                });
+            }
+
+            return Json("Cadastro efetuado com sucesso");
+
+        }
+
+        [HttpPost]
+        public JsonResult RemoverBeneficiario(long Id)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+            bo.Excluir(Id);
+
+            return Json("Remoção efetuada com sucesso");
         }
     }
 }
