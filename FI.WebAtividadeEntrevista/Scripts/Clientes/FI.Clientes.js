@@ -122,7 +122,7 @@ function listarBeneficiarios() {
             sorting: true, //Enable sorting
             defaultSorting: 'Nome ASC', //Set default sorting
             actions: {
-                listAction: "/Cliente/BeneficiarioList",
+                listAction: "/Beneficiario/BeneficiarioList",
             },
             fields: {
                 CPF: {
@@ -169,7 +169,7 @@ function SalvarBeneficiario() {
         }
     }
     $.ajax({
-        url: "/Cliente/SalvarBeneficiario",
+        url: "/Beneficiario/SalvarBeneficiario",
         method: "POST",
         data: dataField,
         error:
@@ -205,7 +205,7 @@ function formatarCPF(cpf) {
 
 function RemoverBeneficiario(id) {
     $.ajax({
-        url: "/Cliente/RemoverBeneficiario",
+        url: "/Beneficiario/RemoverBeneficiario",
         method: "POST",
         data: { Id: id },
         error:
