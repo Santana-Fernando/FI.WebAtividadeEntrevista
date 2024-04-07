@@ -6,7 +6,8 @@
 	@Scripts.Render("~/bundles/clientes")
 	<script>
         var urlPost = '@Url.Action("Incluir", "Cliente", new { area = "" })';
-        PreencherSelectEstado("");
+		PreencherSelectEstado("", "");
+		listarCidades("", "");
 	</script>
 }
 <h2>@Html.Raw(ViewBag.Title)</h2>

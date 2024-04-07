@@ -8,7 +8,8 @@
         var urlPost = '@Url.Action("Alterar", "Cliente", new { area = "" })';
         var obj = @Html.Raw(Json.Encode(Model));
         var urlRetorno = '@Url.Action("Index", "Cliente", new { area = "" })';
-        PreencherSelectEstado(obj.Estado);
+		PreencherSelectEstado(obj.Estado);
+		listarCidades(obj.Estado, obj.Cidade);
 	</script>
 }
 <h2>@Html.Raw(ViewBag.Title)</h2>
