@@ -94,3 +94,27 @@ function listarCidades(estado, cidade) {
 
 	return;
 }
+
+$("#CEP").blur(function (e) {
+
+	//Nova variável "cep" somente com dígitos.
+	var cep = $(this).val();
+
+	//Verifica se campo cep possui valor informado.
+	if (cep != "") {
+
+		//Consulta o webservice viacep.com.br/
+
+		$.getJSON("//viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+			if (!("erro" in dados)) {
+				$('.lds-ring').show();
+
+				$("#Logradouro").val(`${dados.logradouro}, ${dados.bairro}`);
+
+				PreencherSelectEstado(dados.uf);
+				listarCidades(dados.uf, dados.localidade);
+			}
+		});
+	}
+});
