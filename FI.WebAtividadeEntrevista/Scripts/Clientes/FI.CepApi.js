@@ -39,7 +39,6 @@ function PreencherSelectEstado(estado) {
 }
 
 function listarCidades(estado, cidade) {
-	console.log(cidade)
 	if (estado) {
 		$("#Cidade option").remove();
 		$("#Cidade").removeAttr('disabled');

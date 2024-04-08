@@ -163,6 +163,24 @@ namespace WebAtividadeEntrevista.Controllers
             {
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
-        }       
+        }
+
+        [HttpPost]
+        public JsonResult RemoverCliente(long Id)
+        {
+            BoCliente bo = new BoCliente();
+
+            try
+            {
+                bo.Excluir(Id);
+
+                return Json("Remoção efetuada com sucesso");
+            }
+            catch (Exception)
+            {
+                Response.StatusCode = 400;
+                return Json("Erro ao remover cliente");
+            }
+        }
     }
 }

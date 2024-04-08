@@ -23,7 +23,9 @@ function ModalDialog(titulo, texto) {
     $('#' + random).modal('show');
 }
 
-function ModalBeneficiario(link) {
+function ModalBeneficiario() {
+    var Idcliente = (urlPost).split("/")[3] == undefined ? 0 : (urlPost).split("/")[3];
+    
     var texto = `
                 <style>
                     #salvarBeneficiario {
@@ -44,8 +46,8 @@ function ModalBeneficiario(link) {
                             </div>
                             <div class="modal-body">
                                 <form id="formCadastroBeneficiario" method="post">                                    
-                                    <input type="hidden" class="form-control" id="Id" name="Id">
-                                    <input type="hidden" class="form-control" id="Idcliente" name="Idcliente">
+                                    <input type="hidden" class="form-control" id="Id" name="Id"/>
+                                    <input type="hidden" class="form-control" id="Idcliente" name="Idcliente"/>
                                     <div class="row">
 		                                <div class="col-md-4">
 			                                <div class="form-group">
@@ -60,7 +62,7 @@ function ModalBeneficiario(link) {
 			                                </div>
 		                                </div>
                                         <div class="col-md-4" id="salvarBeneficiario">
-				                            <button type="button" class="btn btn-success" onclick="SalvarBeneficiario()">Salvar</button>
+				                            <button type="button" class="btn btn-success" onclick="SalvarBeneficiario(${Idcliente})">Salvar</button>
 			                            </div>
 	                                </div>
                                 </form>
@@ -75,8 +77,34 @@ function ModalBeneficiario(link) {
 
     $('body').append(texto);
     $('#beneficiario').modal('show');
+    $('#Idcliente').val(Idcliente);
 
     listarBeneficiarios();
+}
+
+function ModalConfirmarExclusao(id) {
+    var texto = `
+    <div id="confirmarExclusaoBeneficiario" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Alerta!</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Você realmente deseja excluir esse beneficiário?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="RemoverBeneficiario(${id})">Sim</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+`
+
+    $('body').append(texto);
+    $('#confirmarExclusaoBeneficiario').modal('show');
 }
 
 function listarBeneficiarios() {
@@ -102,7 +130,7 @@ function listarBeneficiarios() {
                     title: '',
                     display: function (data) {
                         return `<div class="pull-right" style="width: 200px;"><button onclick="EditarBeneficiario(${data.record.Id}, '${data.record.Nome}', '${data.record.CPF}', ${data.record.Idcliente})" class="btn btn-primary btn-sm">Alterar</button>
-                                <button onclick="RemoverBeneficiario(${data.record.Id})" class="btn btn-danger btn-sm">Remover</button></div>`;
+                                <button onclick="ModalConfirmarExclusao(${data.record.Id})" class="btn btn-danger btn-sm">Remover</button></div>`;
                     }
                 }
             }
@@ -117,20 +145,20 @@ function listarBeneficiarios() {
         $('#gridBeneficiarios').jtable('load');
 }
 
-function SalvarBeneficiario() {
+function SalvarBeneficiario(Idcliente) {
     var dataField = {};
     if ($("#Id").val() == 0) {
         dataField = {
             "NOME": $("#NomeBeneficiario").val(),
             "CPF": $("#CPFBeneficiario").val(),
-            "Idcliente": 2,
+            "Idcliente": Number(Idcliente)
         }
     } else {
         dataField = {
             "Id": $("#Id").val(),
             "NOME": $("#NomeBeneficiario").val(),
             "CPF": $("#CPFBeneficiario").val(),
-            "Idcliente": $("#Idcliente").val(),
+            "Idcliente": Number(Idcliente)
         }
     }
     $.ajax({
@@ -183,6 +211,7 @@ function RemoverBeneficiario(id) {
         success:
             function (r) {
                 ModalDialog("Sucesso!", r)
+                $('#confirmarExclusaoBeneficiario').modal('hide');
                 listarBeneficiarios();
             }
     });
