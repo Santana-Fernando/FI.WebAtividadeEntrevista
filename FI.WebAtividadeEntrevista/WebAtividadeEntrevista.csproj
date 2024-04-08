@@ -271,8 +271,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\Clientes\FI.AltClientes.js" />
-    <Content Include="Scripts\Clientes\FI.CepApi.js" />
-    <Content Include="Scripts\Clientes\FI.Beneficiario.js" />
+    <Content Include="Scripts\CepApi\FI.CepApi.js" />
+    <Content Include="Scripts\Beneficiarios\FI.Beneficiario.js" />
     <Content Include="Scripts\Clientes\FI.ListClientes.js" />
     <Content Include="Scripts\Clientes\FI.Clientes.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
