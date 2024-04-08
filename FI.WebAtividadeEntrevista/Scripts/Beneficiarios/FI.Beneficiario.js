@@ -27,6 +27,10 @@ function ModalBeneficiario() {
     var Idcliente = (urlPost).split("/")[3] == undefined ? 0 : (urlPost).split("/")[3];
     
     var texto = `
+	            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+	            <script type="text/javascript">
+		            $(".cpf").mask("999.999.999-99");
+	            </script>3
                 <style>
                     #salvarBeneficiario {
 			            top: 24px;
@@ -58,7 +62,7 @@ function ModalBeneficiario() {
 		                                <div class="col-md-4">
 			                                <div class="form-group">
 				                                <label for="CPFBeneficiario">CPF:</label>
-				                                <input required="required" type="text" class="form-control" id="CPFBeneficiario" name="CPFBeneficiario" placeholder="Ex.: 010.011.111-00" maxlength="14">
+				                                <input required="required" type="text" class="form-control cpf" id="CPFBeneficiario" name="CPFBeneficiario" placeholder="Ex.: 010.011.111-00" maxlength="14">
 			                                </div>
 		                                </div>
                                         <div class="col-md-4" id="salvarBeneficiario">

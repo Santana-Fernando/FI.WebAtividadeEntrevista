@@ -97,7 +97,7 @@ function listarCidades(estado, cidade) {
 $("#CEP").blur(function (e) {
 
 	//Nova variável "cep" somente com dígitos.
-	var cep = $(this).val();
+	var cep = $(this).val().replace(/\D/g, '');
 
 	//Verifica se campo cep possui valor informado.
 	if (cep != "") {
